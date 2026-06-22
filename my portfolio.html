@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saad Zighem — Web Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0f0a;
+      --bg2:       #0f160f;
+      --bg3:       #111811;
+      --green:     #39ff14;
+      --green-dim: #1a7a06;
+      --green-mid: #22c70a;
+      --text:      #d4e8d0;
+      --muted:     #6b8f65;
+      --border:    #1e2e1c;
+      --white:     #f0f7ee;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(10,15,10,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--muted); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav ul a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 8rem 6rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(57,255,20,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--green);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--green);
+    }
+
+    h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.4rem;
+    }
+
+    .h1-accent {
+      color: var(--green);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin: 1.4rem 0 2.2rem;
+      max-width: 480px;
+      font-weight: 300;
+    }
+
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      padding: 0.75rem 1.6rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-mid);
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(57,255,20,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--green-dim);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--green);
+      background: rgba(57,255,20,0.05);
+      transform: translateY(-2px);
+    }
+
+    /* ── PHOTO ── */
+    .hero-photo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .photo-frame {
+      position: relative;
+      width: 320px;
+      height: 380px;
+    }
+
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green), transparent 60%);
+      z-index: 0;
+    }
+
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      top: 16px; left: 16px;
+      right: -16px; bottom: -16px;
+      border: 1px solid var(--green-dim);
+      border-radius: 12px;
+      z-index: -1;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+      filter: grayscale(20%) contrast(1.05);
+    }
+
+    .photo-badge {
+      position: absolute;
+      bottom: -16px;
+      left: -16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      z-index: 2;
+    }
+
+    .photo-badge p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--green);
+      line-height: 1.4;
+    }
+
+    .photo-badge span { color: var(--muted); }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 6rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 80px;
+    }
+
+    .section-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--bg2); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+    }
+
+    .about-text p strong { color: var(--white); font-weight: 600; }
+    .about-text p em { color: var(--green); font-style: normal; }
+
+    .about-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.2rem;
+      position: relative;
+      padding-bottom: 1.8rem;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-item:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 32px;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .t-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 1px solid var(--green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--green);
+    }
+
+    .t-content { padding-top: 0.4rem; }
+    .t-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--green);
+      margin-bottom: 0.2rem;
+    }
+
+    .t-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .t-desc strong { color: var(--text); }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--bg); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem 1.2rem;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green-dim);
+      transition: background 0.25s;
+    }
+
+    .skill-card:hover { border-color: var(--green-dim); transform: translateY(-3px); }
+    .skill-card:hover::before { background: var(--green); }
+
+    .skill-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .skill-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--white);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .skill-level {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .skill-bar {
+      margin-top: 0.8rem;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 2px;
+      animation: fillBar 1.2s ease forwards;
+    }
+
+    @keyframes fillBar { from { width: 0; } }
+
+    /* ── CERTIFICATIONS ── */
+    #certifications { background: var(--bg2); }
+
+    .cert-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      max-width: 700px;
+      transition: all 0.25s;
+    }
+
+    .cert-card:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 0 30px rgba(57,255,20,0.06);
+    }
+
+    .cert-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(57,255,20,0.08);
+      border: 1px solid var(--green-dim);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .cert-body { flex: 1; }
+
+    .cert-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .cert-issuer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      margin-bottom: 0.6rem;
+    }
+
+    .cert-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .cert-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      background: rgba(57,255,20,0.08);
+      color: var(--green);
+      border: 1px solid var(--green-dim);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 0.8rem;
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg); }
+
+    .contact-inner {
+      max-width: 560px;
+    }
+
+    .contact-inner p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .contact-link:hover {
+      border-color: var(--green-dim);
+      color: var(--white);
+      transform: translateX(4px);
+    }
+
+    .contact-link-icon {
+      font-size: 1.2rem;
+      width: 36px;
+      text-align: center;
+    }
+
+    .contact-link-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 6rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--green); }
+
+    /* ── TERMINAL CURSOR ── */
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1.2rem; }
+      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; text-align: center; }
+      #hero::after { display: none; }
+      .hero-photo { order: -1; }
+      .photo-frame { width: 220px; height: 260px; }
+      .photo-badge { left: 0; }
+      .btn-group { justify-content: center; }
+      section { padding: 4rem 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem 2rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo"><span>~/</span>saad-zighem</div>
+    <ul>
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#certifications">certs</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-text">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1>
+        Saad<br>
+        <span class="h1-accent">Zighem</span><span class="cursor"></span>
+      </h1>
+      <p class="hero-sub">
+        Web Developer in training — <strong>Casablanca, Morocco.</strong><br>
+        Building toward software engineering & <strong>AI</strong>. Fully committed, no detours.
+      </p>
+      <div class="btn-group">
+        <a href="#contact" class="btn btn-primary">→ Get in touch</a>
+        <a href="https://github.com/Saad-wix" target="_blank" class="btn btn-outline">⌥ GitHub</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <div class="photo-frame">
+        <!-- Replace src with your actual photo path when uploading to GitHub -->
+        <img src="images/image_pro.jpg" alt="Professional Photo" />
+        <div class="photo-badge">
+          <p><span>status:</span> learning &amp; building</p>
+          <p><span>location:</span> Casablanca 🇲🇦</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">01 — about</div>
+    <h2 class="section-title">My Story</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          My journey wasn't a straight line. I spent three years at 
+          <strong>Hassan II University (FSAC Ain Chock)</strong> in physics and chemistry sciences, 
+          then enrolled in an electromechanical automation program at ISTA. 
+          Those paths taught me what I didn't want.
+        </p>
+        <p>
+          But back in <em>May 2021</em>, something already told me where I belonged — 
+          I completed the <strong>Full Stack Development Track</strong> through Udacity, 
+          as part of the UAE's 1 Million Arab Coders Initiative. That certification was the spark.
+        </p>
+        <p>
+          After years of exploring the wrong directions, I came back to what I knew was right. 
+          I'm now in my first year of <strong>Web Development at ISTA</strong> — not by accident, but by choice. 
+          My goal is to master software engineering and eventually move into <em>AI</em>, 
+          to build things that solve real problems in the world.
+        </p>
+        <p><strong>This time, I'm not lost. I know exactly where I'm going.</strong></p>
+      </div>
+
+      <div class="about-timeline">
+        <div class="timeline-item">
+          <div class="t-dot">20</div>
+          <div class="t-content">
+            <div class="t-year">2020</div>
+            <div class="t-desc"><strong>Baccalaureate</strong> — graduated with a good mark. Enrolled in SMPC at Hassan II University (FSAC Ain Chock).</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-dot">21</div>
+          <div class="t-content">
+            <div class="t-year">May 2021</div>
+            <div class="t-desc"><strong>Full Stack Dev certification</strong> — Udacity × 1 Million Arab Coders. The spark that started everything.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-dot">22</div>
+          <div class="t-content">
+            <div class="t-year">2022</div>
+            <div class="t-desc">Enrolled in <strong>ALX Data Analytics</strong>. Explored, learned, kept searching for the right direction.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-dot">24</div>
+          <div class="t-content">
+            <div class="t-year">2023–2024</div>
+            <div class="t-desc"><strong>ESA at ISTA</strong> — electromechanical automation. Realized industrial systems weren't my world.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-dot">▶</div>
+          <div class="t-content">
+            <div class="t-year">Now — 2025</div>
+            <div class="t-desc"><strong>Web Development at ISTA</strong> — Year 1. Back where I belong. Eyes on software engineering and AI.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">02 — skills</div>
+    <h2 class="section-title">Currently Learning</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">HTML5</div>
+        <div class="skill-level">Foundations — active</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 65%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🎨</div>
+        <div class="skill-name">CSS3</div>
+        <div class="skill-level">Foundations — active</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 50%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-level">Learning — in progress</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 30%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-name">Git & GitHub</div>
+        <div class="skill-level">Getting started</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 35%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🖥️</div>
+        <div class="skill-name">VS Code</div>
+        <div class="skill-level">Daily use</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 60%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🤖</div>
+        <div class="skill-name">AI / Future goal</div>
+        <div class="skill-level">Long-term direction</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 10%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="section-label">03 — certifications</div>
+    <h2 class="section-title">Credentials</h2>
+    <div class="cert-card">
+      <div class="cert-icon">🏆</div>
+      <div class="cert-body">
+        <div class="cert-title">Full Stack Development Track</div>
+        <div class="cert-issuer">Udacity × 1 Million Arab Coders Initiative — UAE</div>
+        <div class="cert-desc">
+          Completed the full stack development curriculum as part of the UAE's initiative to train one million Arab coders. 
+          Certified and verified by Udacity, signed by HE Omar Al Olama, UAE Minister of Artificial Intelligence.
+        </div>
+        <div class="cert-badge">✓ Verified — May 2021 · ID: Y2XNDKLP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">04 — contact</div>
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-inner">
+      <p>I'm a beginner, but I'm serious. If you want to connect, collaborate, or just follow the journey — reach out.</p>
+      <div class="contact-links">
+        <a href="https://github.com/Saad-wix" target="_blank" class="contact-link">
+          <span class="contact-link-icon">⌥</span>
+          <div>
+            <span class="contact-link-label">github</span>
+            github.com/Saad-wix
+          </div>
+        </a>
+        <a href="mailto:your@email.com" class="contact-link">
+          <span class="contact-link-icon">✉</span>
+          <div>
+            <span class="contact-link-label">email</span>
+            saadzighem3@gmail.com
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by <span>Saad Zighem</span> — Casablanca 🇲🇦</p>
+    <p><span>2025</span> — v1.0 · more coming soon</p>
+  </footer>
+
+</body>
+</html>
